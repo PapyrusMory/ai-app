@@ -2,6 +2,7 @@ import express from 'express'
 import * as dotenv from 'dotenv'
 import cors from 'cors'
 import { Configuration, OpenAIApi } from 'openai'
+import path from 'path'
 
 dotenv.config()
 
@@ -14,6 +15,13 @@ const openai = new OpenAIApi(configuration)
 const app = express()
 app.use(cors())
 app.use(express.json())
+
+const __dirname = path.resolve()
+
+app.use(express.static(path.join(__dirname, 'dist')))
+app.get('*', (req, res) =>
+  res.sendFile(path.join(__dirname, 'dist/index.html'))
+)
 
 app.get('/', async (req, res) => {
   res.status(200).send({
@@ -44,6 +52,6 @@ app.post('/', async (req, res) => {
   }
 })
 
-app.listen(5000, () =>
-  console.log('Server is running on port http://localhost:5000')
+app.listen(5007, () =>
+  console.log('Server is running on port http://localhost:5007')
 )
